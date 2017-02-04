@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E6943531D2B487000489692 /* PokéWorld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6943521D2B487000489692 /* PokéWorld.swift */; };
+		5E6943531D2B487000489692 /* GameHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6943521D2B487000489692 /* GameHub.swift */; };
 		5E8F790C1D26F7A2007D17ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F790B1D26F7A2007D17ED /* AppDelegate.swift */; };
-		5E8F79101D26F7A2007D17ED /* AscendGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F790F1D26F7A2007D17ED /* AscendGame.swift */; };
+		5E8F79101D26F7A2007D17ED /* Ascend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F790F1D26F7A2007D17ED /* Ascend.swift */; };
 		5E8F79171D26F7A2007D17ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E8F79161D26F7A2007D17ED /* Assets.xcassets */; };
 		5E8F791A1D26F7A2007D17ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E8F79181D26F7A2007D17ED /* LaunchScreen.storyboard */; };
 		5E8F79221D26F8AD007D17ED /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F79211D26F8AD007D17ED /* HomeController.swift */; };
@@ -18,10 +18,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5E6943521D2B487000489692 /* PokéWorld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PokéWorld.swift"; sourceTree = "<group>"; };
+		5E6943521D2B487000489692 /* GameHub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameHub.swift; sourceTree = "<group>"; };
 		5E8F79081D26F7A2007D17ED /* nostalgia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nostalgia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E8F790B1D26F7A2007D17ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5E8F790F1D26F7A2007D17ED /* AscendGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AscendGame.swift; sourceTree = "<group>"; };
+		5E8F790F1D26F7A2007D17ED /* Ascend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ascend.swift; sourceTree = "<group>"; };
 		5E8F79161D26F7A2007D17ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5E8F79191D26F7A2007D17ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5E8F791B1D26F7A2007D17ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,8 +63,8 @@
 				5E8F790B1D26F7A2007D17ED /* AppDelegate.swift */,
 				5EE3AC8C1D29A91E00310D6F /* CoreExtensions.swift */,
 				5E8F79211D26F8AD007D17ED /* HomeController.swift */,
-				5E6943521D2B487000489692 /* PokéWorld.swift */,
-				5E8F790F1D26F7A2007D17ED /* AscendGame.swift */,
+				5E6943521D2B487000489692 /* GameHub.swift */,
+				5E8F790F1D26F7A2007D17ED /* Ascend.swift */,
 				5E8F79161D26F7A2007D17ED /* Assets.xcassets */,
 				5ECE9A451D3846CD008EFA8A /* Fonts */,
 				5E8F79181D26F7A2007D17ED /* LaunchScreen.storyboard */,
@@ -105,6 +105,7 @@
 				TargetAttributes = {
 					5E8F79071D26F7A2007D17ED = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 84GR68BEJA;
 						LastSwiftMigration = 0820;
 					};
 				};
@@ -145,10 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E6943531D2B487000489692 /* PokéWorld.swift in Sources */,
+				5E6943531D2B487000489692 /* GameHub.swift in Sources */,
 				5E8F79221D26F8AD007D17ED /* HomeController.swift in Sources */,
 				5EE3AC8D1D29A91E00310D6F /* CoreExtensions.swift in Sources */,
-				5E8F79101D26F7A2007D17ED /* AscendGame.swift in Sources */,
+				5E8F79101D26F7A2007D17ED /* Ascend.swift in Sources */,
 				5E8F790C1D26F7A2007D17ED /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -206,7 +207,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -248,7 +249,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -261,6 +262,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 84GR68BEJA;
 				INFOPLIST_FILE = nostalgia/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -274,6 +276,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 84GR68BEJA;
 				INFOPLIST_FILE = nostalgia/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

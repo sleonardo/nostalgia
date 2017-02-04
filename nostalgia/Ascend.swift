@@ -1,5 +1,5 @@
 //
-//  AscendGame.swift
+//  Ascend.swift
 //  nostalgia
 //
 //  Created by George Lim on 2016-07-01.
@@ -7,6 +7,19 @@
 //
 
 import SpriteKit
+
+// MARK: - AscendColors
+struct AscendColors {
+  static let darkText: UIColor = UIColor(hex: "#404040")
+  static let lightText: UIColor = UIColor(hex: "#F8F8F8")
+  static let greenHealth: UIColor = UIColor(hex: "#58D080")
+  static let greenHealthLight: UIColor = UIColor(hex: "#70F8A8")
+  static let yellowHealth: UIColor = UIColor(hex: "#C8A808")
+  static let yellowHealthLight: UIColor = UIColor(hex: "#F8E038")
+  static let redHealth: UIColor = UIColor(hex: "#A84048")
+  static let redHealthLight: UIColor = UIColor(hex: "#F85838")
+  static let experience: UIColor = UIColor(hex: "#40C8F8")
+}
 
 // MARK: - Physics Category
 private enum PhysicsCategory: UInt32 {
@@ -19,7 +32,6 @@ private enum PhysicsCategory: UInt32 {
 
 // MARK: - Landscape
 private struct Landscape {
-
   let mapScale: CGFloat
   let spriteScale: CGFloat
   let blockWidth: CGFloat
@@ -48,39 +60,41 @@ private struct Landscape {
 }
 
 // MARK: - Ring Spawner
-private struct Spawner {
-
-  private(set) var summonRings: SKAction
+private class Spawner {
+  private var spawnRings: SKAction
 
   init() {
-    summonRings = SKAction()
+    spawnRings = SKAction()
   }
 
-  mutating func updateRing(_ scene: SKScene, mapScale: CGFloat, spriteScale: CGFloat, skyCenter: CGFloat, boulder: CGPath) -> Void {
+  func getRings() -> SKAction {
+    return spawnRings
+  }
+
+  func setRings(in scene: SKScene, mapScale: CGFloat, spriteScale: CGFloat, skyCenter: CGFloat, boulder: CGPath) -> Void {
     let ringWidth: CGFloat = 120
     let ringHeight: CGFloat = 192
     let boulderHeight: CGFloat = 30
     let boulderHeightOffset: CGFloat = 3
+    let finalX: CGFloat = scene.size.width + ringWidth * spriteScale / 2
+    let travelTime: TimeInterval = TimeInterval(finalX * (0.0075 - CGFloat(Trainer.ascend.activePokémon.getLevel()) * 0.000025) / mapScale)
+    let spawnDelay: TimeInterval = travelTime * (0.5 + TimeInterval(Trainer.ascend.activePokémon.getLevel()) / 600)
+    let spawnRadius: CGFloat = scene.size.height - skyCenter - ringHeight * spriteScale / 2
 
-    let finalX = scene.size.width + ringWidth * spriteScale / 2
-    let travelTime = TimeInterval(finalX * (0.0075 - CGFloat(Trainer.ascend.activePokémon.level) * 0.000025) / mapScale)
-    let spawnDelay = travelTime * (0.5 + TimeInterval(Trainer.ascend.activePokémon.level) / 600)
-    let spawnRadius = scene.size.height - skyCenter - ringHeight * spriteScale / 2
-
-    summonRings = .spawnInfinite(delay: spawnDelay, spawn: {
+    spawnRings = .spawnInfinite(delay: spawnDelay, spawn: {
       () -> Void in
-      let ring = SKSpriteNode(imageNamed: "boulder-ring")
+      let ring: SKSpriteNode = SKSpriteNode(imageNamed: "boulder-ring")
       ring.setScale(spriteScale)
 
-      let spawnOffset = CGFloat.random(min: -spawnRadius, max: spawnRadius)
+      let spawnOffset: CGFloat = CGFloat.random(min: -spawnRadius, max: spawnRadius)
       ring.position = CGPoint(x: -ringWidth * spriteScale / 2, y: skyCenter + spawnOffset)
       ring.zPosition = 99
 
-      let ringOverlay = SKSpriteNode(imageNamed: "boulder-ring-overlay")
+      let ringOverlay: SKSpriteNode = SKSpriteNode(imageNamed: "boulder-ring-overlay")
       ringOverlay.position = CGPoint(x: -(ringWidth - ringOverlay.size.width) / 2, y: -1)
       ringOverlay.zPosition = 2
 
-      let upperBarrier = SKSpriteNode()
+      let upperBarrier: SKSpriteNode = SKSpriteNode()
       upperBarrier.position.y = (ringHeight - boulderHeight - boulderHeightOffset) / 2
 
       upperBarrier.physicsBody = SKPhysicsBody(polygonFrom: boulder)
@@ -88,13 +102,13 @@ private struct Spawner {
       upperBarrier.physicsBody?.isDynamic = false
       upperBarrier.physicsBody?.categoryBitMask = PhysicsCategory.boulder.rawValue
 
-      let scoreZone = SKSpriteNode()
+      let scoreZone: SKSpriteNode = SKSpriteNode()
       scoreZone.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1, height: ringHeight - boulderHeight * 2))
       scoreZone.physicsBody?.affectedByGravity = false
       scoreZone.physicsBody?.isDynamic = false
       scoreZone.physicsBody?.categoryBitMask = PhysicsCategory.scoreZone.rawValue
 
-      let lowerBarrier = SKSpriteNode()
+      let lowerBarrier: SKSpriteNode = SKSpriteNode()
       lowerBarrier.position.y = -(ringHeight - boulderHeight - boulderHeightOffset) / 2
 
       lowerBarrier.physicsBody = SKPhysicsBody(polygonFrom: boulder)
@@ -109,211 +123,217 @@ private struct Spawner {
 
       scene.addChild(ring)
 
-      ring.run(.moveToXAndRemove(finalX, duration: travelTime))
+      ring.run(.moveTo(x: finalX, withDuration: travelTime, remove: true))
     })
   }
 }
 
-// MARK: - Game UI
-private struct GameUI {
+// MARK: - Score UI
+private class ScoreUI {
+  private let node: SKSpriteNode
 
+  private var score: Int
+
+  init(node: SKSpriteNode) {
+    self.node = node
+    self.score = 0
+    setScore(0)
+  }
+
+  private func setScore(_ newScore: Int) -> Void {
+    let scoreText: SKLabelNode = node.childNode(withName: "scoreText") as! SKLabelNode
+    scoreText.text = "SCORE: \(newScore)"
+  }
+
+  func increaseScore() -> Void {
+    score += 1
+    setScore(score)
+  }
+
+  func resetScore() -> Void {
+    score = 0
+    setScore(0)
+  }
+}
+
+// MARK: - Status UI
+private class StatusUI {
+  private let node: SKSpriteNode
+  private let hpBarWidth: CGFloat
+  private let xpBarWidth: CGFloat
+
+  init(node: SKSpriteNode) {
+    self.node = node
+    let hpBar: SKSpriteNode = node.childNode(withName: "hpBar") as! SKSpriteNode
+    hpBarWidth = hpBar.size.width
+
+    let xpBar: SKSpriteNode = node.childNode(withName: "xpBar") as! SKSpriteNode
+    xpBarWidth = xpBar.size.width
+  }
+
+  func getNode() -> SKSpriteNode {
+    return node
+  }
+
+  func updateName() -> Void {
+    let nameText: SKLabelNode = node.childNode(withName: "nameText") as! SKLabelNode
+    nameText.text = Trainer.ascend.activePokémon.getNickname()
+  }
+
+  private func getHPColors(_ hpRatio: CGFloat) -> (color: UIColor, colorLight: UIColor) {
+    switch hpRatio {
+    case 0 ... 0.2:
+      return(AscendColors.redHealth, AscendColors.redHealthLight)
+    case 0.2 ... 0.5:
+      return (AscendColors.yellowHealth, AscendColors.yellowHealthLight)
+    default:
+      return (AscendColors.greenHealth, AscendColors.greenHealthLight)
+    }
+  }
+
+  func updateHP(_ originalHP: Int, newRatio: CGFloat) -> Void {
+    let hpBar: SKSpriteNode = node.childNode(withName: "hpBar") as! SKSpriteNode
+    let hpBarLight: SKSpriteNode = node.childNode(withName: "hpBarLight") as! SKSpriteNode
+    let hpText: SKLabelNode = node.childNode(withName: "hpText") as! SKLabelNode
+    let (color, colorLight): (UIColor, UIColor) = getHPColors(newRatio)
+
+    guard originalHP != Trainer.ascend.activePokémon.getHP() else {
+      hpBar.color = color
+      hpBar.size.width = hpBarWidth * newRatio
+
+      hpBarLight.color = colorLight
+      hpBarLight.size.width = hpBar.size.width
+
+      hpText.text = "\(Trainer.ascend.activePokémon.getHP())/\(Trainer.ascend.activePokémon.getMaxHP())"
+      return
+    }
+
+    var currentHPBarWidth: CGFloat = hpBar.size.width
+    var deltaWidth: CGFloat = currentHPBarWidth * newRatio - currentHPBarWidth
+    var increment: Int
+    switch deltaWidth > 0 {
+    case true:
+      increment = 1
+    case false:
+      increment = -1
+      deltaWidth *= -1
+    }
+
+    let updateHPBarAction: SKAction = SKAction.run({
+      () -> Void in
+      let hpRatio: CGFloat = currentHPBarWidth / self.hpBarWidth
+      let (hpColor, hpColorLight): (UIColor, UIColor) = self.getHPColors(hpRatio)
+
+      hpBar.color = hpColor
+      hpBar.size.width = currentHPBarWidth
+
+      hpBarLight.color = hpColorLight
+      hpBarLight.size.width = hpBar.size.width
+
+      currentHPBarWidth += CGFloat(increment)
+    })
+
+    var waitAction = SKAction.wait(forDuration: 0.25)
+    var actionSequence = SKAction.sequence([updateHPBarAction, waitAction])
+    let animateHPBar = SKAction.repeat(actionSequence, count: Int(deltaWidth))
+
+    var currentHP = originalHP
+    var deltaHP = Trainer.ascend.activePokémon.getHP() - currentHP
+    switch deltaHP > 0 {
+    case true:
+      increment = 1
+    case false:
+      increment = -1
+      deltaHP *= -1
+    }
+
+    let updateHPTextAction = SKAction.run({
+      () -> Void in
+      hpText.text = "\(currentHP)/\(Trainer.ascend.activePokémon.getMaxHP())"
+      currentHP += increment
+    })
+
+    waitAction = SKAction.wait(forDuration: 0.33 * Double(deltaWidth) / Double(deltaHP))
+    actionSequence = SKAction.sequence([updateHPTextAction, waitAction])
+    let animateHPText = SKAction.repeat(actionSequence, count: deltaHP)
+
+    let animateHP = SKAction.group([animateHPBar, animateHPText])
+    let fadeOutAction = SKAction.fade(in: false, withDuration: 0.25, waitFirst: 1.25)
+
+    switch node.action(forKey: "animateHP") == nil {
+    case true:
+      let fadeInAction = SKAction.fade(in: true, withDuration: 0.25, waitLast: 0.25)
+      actionSequence = SKAction.sequence([fadeInAction, animateHP, fadeOutAction])
+    case false:
+      actionSequence = SKAction.sequence([animateHP, fadeOutAction])
+    }
+
+    node.run(actionSequence, withKey: "animateHP")
+  }
+
+  func updateXP(_ newRatio: CGFloat, willLevelUp: Bool) -> Void {
+    let xpBar = node.childNode(withName: "xpBar") as! SKSpriteNode
+    xpBar.color = AscendColors.experience
+    xpBar.size.width = xpBarWidth * newRatio
+
+    guard willLevelUp else {
+      return
+    }
+
+    let levelText = node.childNode(withName: "levelText") as! SKLabelNode
+    levelText.text = "Lv\(Trainer.ascend.activePokémon.getLevel())"
+    //animate Level up
+  }
+}
+
+// MARK: - Game UI
+private class GameUI {
   private let scoreUI: ScoreUI
   private let statusUI: StatusUI
 
-  private(set) var currentScore: Int
-  private(set) var successfulRecoveries: Int
-
-  private struct ScoreUI {
-
-    private let node: SKSpriteNode
-
-    init(node: SKSpriteNode) {
-      self.node = node
-      updateScore()
-    }
-
-    func updateScore(_ newScore: Int = 0) -> Void {
-      let scoreText = node.childNode(withName: "scoreText") as! SKLabelNode
-      scoreText.text = "SCORE: \(newScore)"
-    }
-  }
-
-  private struct StatusUI {
-
-    fileprivate let node: SKSpriteNode
-    private let hpBarWidth: CGFloat
-    private let xpBarWidth: CGFloat
-
-    init(node: SKSpriteNode) {
-      self.node = node
-      let hpBar = node.childNode(withName: "hpBar") as! SKSpriteNode
-      hpBarWidth = hpBar.size.width
-
-      let xpBar = node.childNode(withName: "xpBar") as! SKSpriteNode
-      xpBarWidth = xpBar.size.width
-    }
-
-    func fade(_ fadeIn: Bool, startDelay: TimeInterval = 0, endDelay: TimeInterval = 0) -> SKAction {
-      let delayBeforeAction = SKAction.wait(forDuration: startDelay)
-      let delayAfterAction = SKAction.wait(forDuration: endDelay)
-      let fadeAction: SKAction
-      switch fadeIn {
-      case true:
-        fadeAction = .fadeIn(withDuration: 0.25)
-      case false:
-        fadeAction = .fadeOut(withDuration: 0.25)
-      }
-
-      return SKAction.sequence([delayBeforeAction, fadeAction, delayAfterAction])
-    }
-
-    func updateName() -> Void {
-      let nameText = node.childNode(withName: "nameText") as! SKLabelNode
-      nameText.text = Trainer.ascend.activePokémon.nickname
-    }
-
-    func updateHP(_ originalHP: Int, newRatio: CGFloat, color: UIColor, colorLight: UIColor) -> Void {
-      let hpBar = node.childNode(withName: "hpBar") as! SKSpriteNode
-      let hpBarLight = node.childNode(withName: "hpBarLight") as! SKSpriteNode
-      let hpText = node.childNode(withName: "hpText") as! SKLabelNode
-
-      guard originalHP != Trainer.ascend.activePokémon.hp else {
-        hpBar.color = color
-        hpBar.size.width = hpBarWidth * newRatio
-
-        hpBarLight.color = colorLight
-        hpBarLight.size.width = hpBar.size.width
-
-        hpText.text = "\(Trainer.ascend.activePokémon.hp)/\(Trainer.ascend.activePokémon.maxHP)"
-        return
-      }
-
-      var currentHPBarWidth = hpBar.size.width
-      var deltaWidth = currentHPBarWidth * newRatio - currentHPBarWidth
-      var increment: Int
-      switch deltaWidth > 0 {
-      case true:
-        increment = 1
-      case false:
-        increment = -1
-        deltaWidth *= -1
-      }
-
-      let updateHPBarAction = SKAction.run({
-        () -> Void in
-        let hpRatio = currentHPBarWidth / self.hpBarWidth
-        let (hpColor, hpColorLight) = GameUI.getHPColor(hpRatio)
-
-        hpBar.color = hpColor
-        hpBar.size.width = currentHPBarWidth
-
-        hpBarLight.color = hpColorLight
-        hpBarLight.size.width = hpBar.size.width
-
-        currentHPBarWidth += CGFloat(increment)
-      })
-
-      var delayAction = SKAction.wait(forDuration: 0.25)
-      var actionSequence = SKAction.sequence([updateHPBarAction, delayAction])
-      let animateHPBar = SKAction.repeat(actionSequence, count: Int(deltaWidth))
-
-      var currentHP = originalHP
-      var deltaHP = Trainer.ascend.activePokémon.hp - currentHP
-      switch deltaHP > 0 {
-      case true:
-        increment = 1
-      case false:
-        increment = -1
-        deltaHP *= -1
-      }
-
-      let updateHPTextAction = SKAction.run({
-        () -> Void in
-        hpText.text = "\(currentHP)/\(Trainer.ascend.activePokémon.maxHP)"
-        currentHP += increment
-      })
-
-      delayAction = SKAction.wait(forDuration: 0.33 * Double(deltaWidth) / Double(deltaHP))
-      actionSequence = SKAction.sequence([updateHPTextAction, delayAction])
-      let animateHPText = SKAction.repeat(actionSequence, count: deltaHP)
-
-      let animateHP = SKAction.group([animateHPBar, animateHPText])
-      switch node.action(forKey: "animateHP") == nil {
-      case true:
-        actionSequence = SKAction.sequence([fade(true, endDelay: 0.25), animateHP, fade(false, startDelay: 1.25)])
-      case false:
-        actionSequence = SKAction.sequence([animateHP, fade(false, startDelay: 1.25)])
-      }
-
-      node.run(actionSequence, withKey: "animateHP")
-    }
-
-    func updateXP(_ newRatio: CGFloat, willLevelUp: Bool) -> Void {
-      let xpBar = node.childNode(withName: "xpBar") as! SKSpriteNode
-      xpBar.color = PokéColors.experience
-      xpBar.size.width = xpBarWidth * newRatio
-
-      guard willLevelUp else {
-        return
-      }
-
-      let levelText = node.childNode(withName: "levelText") as! SKLabelNode
-      levelText.text = "Lv\(Trainer.ascend.activePokémon.level)"
-      //animate Level up
-    }
-  }
+  private var recoveries: Int
 
   init(scoreUI: SKSpriteNode, statusUI: SKSpriteNode) {
     self.scoreUI = ScoreUI(node: scoreUI)
     self.statusUI = StatusUI(node: statusUI)
-    currentScore = 0
-    successfulRecoveries = 0
+    recoveries = 0
     updateHP()
     updateXP()
   }
 
-  func showStatusUI(_ fadeIn: Bool, startDelay: TimeInterval = 0, endDelay: TimeInterval = 0) -> Void {
-    let fadeAction = statusUI.fade(fadeIn, startDelay: startDelay, endDelay: endDelay)
-    statusUI.node.run(fadeAction)
+  func showStatusUI(_ fadeIn: Bool, waitFirst: TimeInterval = 0, waitLast: TimeInterval = 0) -> Void {
+    let fadeAction = SKAction.fade(in: fadeIn, withDuration: 0.25, waitFirst: waitFirst, waitLast: waitLast)
+    statusUI.getNode().run(fadeAction)
   }
 
-  mutating func newRound() -> Void {
-    currentScore = 0
-    successfulRecoveries = 0
+  func newRound() -> Void {
+    scoreUI.resetScore()
+    recoveries = 0
   }
 
-  mutating func increaseScore() -> Void {
-    currentScore += 1
-    scoreUI.updateScore(currentScore)
+  func increaseScore() -> Void {
+    scoreUI.increaseScore()
   }
 
-  mutating func playerRecovered() -> Void {
-    successfulRecoveries += 1
+  func getRecoveries() -> Int {
+    return recoveries
   }
 
-  private static func getHPColor(_ hpRatio: CGFloat) -> (hpColor: UIColor, hpColorLight: UIColor) {
-    switch hpRatio {
-    case 0 ... 0.2:
-      return(PokéColors.redHealth, PokéColors.redHealthLight)
-    case 0.2 ... 0.5:
-      return (PokéColors.yellowHealth, PokéColors.yellowHealthLight)
-    default:
-      return (PokéColors.greenHealth, PokéColors.greenHealthLight)
-    }
+  func playerRecovered() -> Void {
+    recoveries += 1
   }
 
-  private func updateHP(_ originalHP: Int = Trainer.ascend.activePokémon.hp) -> Void {
-    let hpRatio = CGFloat(Trainer.ascend.activePokémon.hp) / CGFloat(Trainer.ascend.activePokémon.maxHP)
-    let (hpColor, hpColorLight) = GameUI.getHPColor(hpRatio)
-    statusUI.updateHP(originalHP, newRatio: hpRatio, color: hpColor, colorLight: hpColorLight)
+  private func updateHP(_ originalHP: Int = Trainer.ascend.activePokémon.getHP()) -> Void {
+    let hpRatio = CGFloat(Trainer.ascend.activePokémon.getHP()) / CGFloat(Trainer.ascend.activePokémon.getMaxHP())
+    statusUI.updateHP(originalHP, newRatio: hpRatio)
   }
 
   func takeDamage(_ amount: Int) -> Void {
-    let originalHP = Trainer.ascend.activePokémon.hp
+    let originalHP = Trainer.ascend.activePokémon.getHP()
     Trainer.ascend.activePokémon.takeDamage(abs(amount))
     updateHP(originalHP)
 
-    guard Trainer.ascend.activePokémon.hp == 0 else {
+    guard Trainer.ascend.activePokémon.getHP() == 0 else {
       return
     }
 
@@ -323,27 +343,26 @@ private struct GameUI {
   func updateXP(_ amount: Int = 0) -> Void {
     var levelUp = false
     if amount > 0 {
-      levelUp = Trainer.ascend.activePokémon.addXPLevelUp(amount)
+      levelUp = Trainer.ascend.activePokémon.increaseXP(amount)
     }
 
-    let xpRatio = CGFloat(Trainer.ascend.activePokémon.xp) / CGFloat(Trainer.ascend.activePokémon.levelUpXP)
+    let xpRatio = CGFloat(Trainer.ascend.activePokémon.getXP()) / CGFloat(Trainer.ascend.activePokémon.getLevelUpXP())
     statusUI.updateXP(xpRatio, willLevelUp: levelUp)
   }
 }
 
-class AscendGame: SKScene {
-
-  // MARK: - Globals
+// MARK: - Main
+class Ascend: SKScene {
   private var landscape: Landscape!
   private var spawner: Spawner!
-  fileprivate var gameUI: GameUI!
-  fileprivate var statusUI: SKSpriteNode!
-  // MARK: - Pokémon-related Globals
+  private var statusUI: SKSpriteNode!
   private var player: SKSpriteNode!
-  // MARK: - In-game Globals
-  private var flyHeight: CGFloat!
-  private var ascending = false
-  fileprivate var recovering = false // NEED TO USE THIS
+  private var flyHeight: CGFloat = -1
+  private var ascending: Bool = false
+
+  fileprivate var gameUI: GameUI!
+  fileprivate var recovering = false
+  fileprivate var fallen = false
 
   override func didMove(to view: SKView) -> Void {
     physicsWorld.contactDelegate = self
@@ -353,7 +372,7 @@ class AscendGame: SKScene {
 
     do {
       paintLandscape()
-      try updatePokémon()
+      try updatePlayer()
       loadUI()
     } catch {
       print("The requested asset could not be found.")
@@ -392,7 +411,7 @@ class AscendGame: SKScene {
     addChild(groundBarrier)
   }
 
-  private func getSpriteBody(_ model: String, size: CGFloat = 1) -> CGPath? {
+  private func getSpriteBody(model: String, size: CGFloat = 1) -> CGPath? {
     let path = CGMutablePath()
     var offsetX: CGFloat
     var offsetY: CGFloat
@@ -619,10 +638,11 @@ class AscendGame: SKScene {
     return path
   }
 
-  private func updatePokémon() throws -> Void {
-    let pokéSize = (0.9 + CGFloat(Trainer.ascend.activePokémon.level) * 0.002) * landscape.spriteScale
-    var pokéSprite = Trainer.ascend.activePokémon.model
-    if Trainer.ascend.activePokémon.isShiny {
+  private func updatePlayer() throws -> Void {
+    let pokéSize = (0.9 + CGFloat(Trainer.ascend.activePokémon.getLevel()) * 0.002) * landscape.spriteScale
+    var pokéSprite = Trainer.ascend.activePokémon.getModel()
+
+    if Trainer.ascend.activePokémon.isShiny() {
       pokéSprite += "-shiny"
     }
 
@@ -631,8 +651,8 @@ class AscendGame: SKScene {
     player.position = CGPoint(x: size.width / 2, y: landscape.skyCenter + player.size.height)
     player.zPosition = 100
 
-    guard let pokéBody = getSpriteBody(Trainer.ascend.activePokémon.model, size: pokéSize), let boulder = getSpriteBody("boulder") else {
-      throw PokéWorldError.requestedAssetNotFound
+    guard let pokéBody = getSpriteBody(model: Trainer.ascend.activePokémon.getModel(), size: pokéSize), let boulder = getSpriteBody(model: "boulder") else {
+      throw GameHubError.requestedAssetNotFound
     }
 
     player.physicsBody = SKPhysicsBody(polygonFrom: pokéBody)
@@ -642,8 +662,8 @@ class AscendGame: SKScene {
     player.physicsBody?.contactTestBitMask = PhysicsCategory.groundBarrier.rawValue | PhysicsCategory.boulder.rawValue | PhysicsCategory.scoreZone.rawValue
 
     physicsWorld.gravity = CGVector(dx: 0, dy: -9.8 * pokéSize)
-    flyHeight = player.size.height * 2
-    spawner.updateRing(self, mapScale: landscape.mapScale, spriteScale: pokéSize, skyCenter: landscape.skyCenter, boulder: boulder)
+    flyHeight = player.size.height * 4 / 3
+    spawner.setRings(in: self, mapScale: landscape.mapScale, spriteScale: pokéSize, skyCenter: landscape.skyCenter, boulder: boulder)
 
     addChild(player)
   }
@@ -655,7 +675,7 @@ class AscendGame: SKScene {
     scoreUI.zPosition = 200
 
     let scoreText = SKLabelNode(fontNamed: "Pokemon Emerald")
-    scoreText.fontColor = PokéColors.lightText
+    scoreText.fontColor = AscendColors.lightText
     scoreText.fontSize = 14
     scoreText.name = "scoreText"
     scoreText.verticalAlignmentMode = .center
@@ -689,25 +709,25 @@ class AscendGame: SKScene {
     xpBar.zPosition = 1
 
     let nameText = SKLabelNode(fontNamed: "Pokemon Emerald")
-    nameText.fontColor = PokéColors.darkText
+    nameText.fontColor = AscendColors.darkText
     nameText.fontSize = 10
     nameText.name = "nameText"
-    nameText.text = Trainer.ascend.activePokémon.nickname
+    nameText.text = Trainer.ascend.activePokémon.getNickname()
     nameText.horizontalAlignmentMode = .left
     nameText.position = CGPoint(x: -41.5, y: 1)
     nameText.zPosition = 1
 
     let levelText = SKLabelNode(fontNamed: "Pokemon Emerald")
-    levelText.fontColor = PokéColors.darkText
+    levelText.fontColor = AscendColors.darkText
     levelText.fontSize = 10
     levelText.name = "levelText"
-    levelText.text = "Lv\(Trainer.ascend.activePokémon.level)"
+    levelText.text = "Lv\(Trainer.ascend.activePokémon.getLevel())"
     levelText.horizontalAlignmentMode = .right
     levelText.position = CGPoint(x: 39, y: 1)
     levelText.zPosition = 1
 
     let hpText = SKLabelNode(fontNamed: "Pokemon Emerald")
-    hpText.fontColor = PokéColors.darkText
+    hpText.fontColor = AscendColors.darkText
     hpText.fontSize = 10
     hpText.name = "hpText"
     hpText.horizontalAlignmentMode = .right
@@ -752,10 +772,10 @@ class AscendGame: SKScene {
     case .ascendLobby:
       Trainer.currentLocation = .ascendInGame
       player.physicsBody?.affectedByGravity = true
-      run(spawner.summonRings)
+      run(spawner.getRings())
       gameUI.showStatusUI(false)
     default:
-      throw PokéWorldError.playerNotInValidMap
+      throw GameHubError.playerNotInValidMap
     }
   }
 
@@ -768,6 +788,10 @@ class AscendGame: SKScene {
       if ascending && !recovering {
         player.physicsBody?.velocity = CGVector(dx: 0, dy: player.physicsBody!.velocity.dy + flyHeight)
       }
+
+      if fallen {
+        player.physicsBody?.velocity = CGVector(dx: 512, dy: 0)
+      }
     default:
       break
     }
@@ -779,7 +803,7 @@ class AscendGame: SKScene {
       enumerateChildNodes(withName: landscape.animatingNodes[i], using: {
         node, error -> Void in
         let sprite = node as! SKSpriteNode
-        if sprite.position.x >= self.landscape.blockWidth * CGFloat(self.landscape.blocksForAnimation - 1) {
+        if sprite.position.x >= self.landscape.blockWidth * CGFloat(self.landscape.blocksForAnimation - 1) - 1 {
           sprite.position.x = -self.landscape.blockWidth
         }
 
@@ -807,23 +831,22 @@ class AscendGame: SKScene {
   //  }
 
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) -> Void {
-    super.touchesEnded(touches, with: event) //Remove?
     if !recovering {
       ascending = false
     }
   }
 }
 
-extension AscendGame: SKPhysicsContactDelegate {
-
+extension Ascend: SKPhysicsContactDelegate {
   func didBegin(_ contact: SKPhysicsContact) -> Void {
     let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
     switch contactMask {
     case PhysicsCategory.player.rawValue | PhysicsCategory.boulder.rawValue:
       let chanceToRecover = Int(CGFloat.random(min: 0, max: 100))
-      switch chanceToRecover < 50 - gameUI.successfulRecoveries * 10 {
+      switch chanceToRecover < 50 - gameUI.getRecoveries() * 10 {
       case true:
-        recovering = true
+        // recovering = true
+        break
       case false:
         //player is dead
         break
@@ -831,6 +854,8 @@ extension AscendGame: SKPhysicsContactDelegate {
     case PhysicsCategory.player.rawValue | PhysicsCategory.scoreZone.rawValue:
       contact.bodyB.categoryBitMask = 0
       gameUI.increaseScore()
+    case PhysicsCategory.player.rawValue | PhysicsCategory.groundBarrier.rawValue:
+      fallen = true
     default:
       break
     }

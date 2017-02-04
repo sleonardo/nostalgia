@@ -8,20 +8,17 @@
 
 import SpriteKit
 
-precedencegroup ExponentiativePrecedence {
+precedencegroup ExponentiationPrecedence {
   associativity: right
   higherThan: MultiplicationPrecedence
 }
 
-
-// Fix Power errors
-infix operator ^: ExponentiativePrecedence
-func ^ (radix: Double, power: Double) -> Int {
-  return Int(pow(radix, power))
+infix operator ^^: ExponentiationPrecedence
+public func ^^ (radix: Int, power: Int) -> Int {
+  return Int(pow(Double(radix), Double(power)))
 }
 
 extension CGFloat {
-
   static func random() -> CGFloat {
     return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
   }
@@ -32,7 +29,6 @@ extension CGFloat {
 }
 
 extension UIColor {
-
   convenience init(hex: String, alpha: CGFloat = 1) {
     var hexValue: UInt32 = 0
     Scanner(string: hex.substring(from: hex.characters.index(hex.startIndex, offsetBy: 1))).scanHexInt32(&hexValue)
@@ -41,23 +37,41 @@ extension UIColor {
 }
 
 extension SKAction {
+  static func moveTo(x: CGFloat, withDuration duration: TimeInterval, remove willRemove: Bool = false) -> SKAction {
+    let moveAction = SKAction.moveTo(x: x, duration: duration)
 
-  static func moveToXAndRemove(_ x: CGFloat, duration: TimeInterval) -> SKAction {
-    let moveToX = SKAction.moveTo(x: x, duration: duration)
-    let remove = SKAction.removeFromParent()
-    return (SKAction.sequence([moveToX, remove]))
+    if willRemove {
+      let removeAction = SKAction.removeFromParent()
+      return SKAction.sequence([moveAction, removeAction])
+    } else {
+      return moveAction
+    }
+  }
+
+  static func fade(in fadeIn: Bool, withDuration duration: TimeInterval, waitFirst: TimeInterval = 0, waitLast: TimeInterval = 0) -> SKAction {
+    let waitFirstAction = SKAction.wait(forDuration: waitFirst)
+    let fadeAction: SKAction
+    let waitLastAction = SKAction.wait(forDuration: waitLast)
+
+    switch fadeIn {
+    case true:
+      fadeAction = .fadeIn(withDuration: duration)
+    case false:
+      fadeAction = .fadeOut(withDuration: duration)
+    }
+
+    return SKAction.sequence([waitFirstAction, fadeAction, waitLastAction])
   }
 
   static func spawnInfinite(delay: TimeInterval, spawn: @escaping () -> Void) -> SKAction {
-    let delayAction = SKAction.wait(forDuration: delay)
     let spawnAction = SKAction.run(spawn)
-    let actionSequence = SKAction.sequence([spawnAction, delayAction])
+    let waitAction = SKAction.wait(forDuration: delay)
+    let actionSequence = SKAction.sequence([spawnAction, waitAction])
     return SKAction.repeatForever(actionSequence)
   }
 }
 
 extension SKNode {
-
   func runAction(action: SKAction, withKey: String, completion: @escaping () -> Void) -> Void {
     let completionAction = SKAction.run(completion)
     let actionSequence = SKAction.sequence([action, completionAction])

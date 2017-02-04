@@ -16,3 +16,6 @@ The game gives you control as a legendary Pokémon Latios or Latias. You soar th
 * An intro cinematic before every round where MewTwo is seen creating boulder rings for Latios/Latias
 * A PokéWorld multiplayer hub which allows trainers to train their Latios/Latias by continuously playing
 * Working Levelling/XP system for Latios/Latias after each round is complete
+
+## Demo:
+[![Demo](demo.gif)](https://www.youtube.com/watch?v=Xug-ga3GNn0)

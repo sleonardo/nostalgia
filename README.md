@@ -26,4 +26,4 @@ The game gives you control as a legendary Pokémon Latios or Latias. You soar th
 * Working Levelling/XP system for Latios/Latias after each round is complete
 
 # Demo
-[Demo](demo.gif)
+[![Demo](demo.gif)](https://youtu.be/nqeze8QPuRQ)

@@ -7,27 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E6943531D2B487000489692 /* GameHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6943521D2B487000489692 /* GameHub.swift */; };
+		5E6943531D2B487000489692 /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6943521D2B487000489692 /* Pokemon.swift */; };
 		5E8F790C1D26F7A2007D17ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F790B1D26F7A2007D17ED /* AppDelegate.swift */; };
-		5E8F79101D26F7A2007D17ED /* Ascend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F790F1D26F7A2007D17ED /* Ascend.swift */; };
+		5E8F79101D26F7A2007D17ED /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F790F1D26F7A2007D17ED /* GameScene.swift */; };
 		5E8F79171D26F7A2007D17ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E8F79161D26F7A2007D17ED /* Assets.xcassets */; };
 		5E8F791A1D26F7A2007D17ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E8F79181D26F7A2007D17ED /* LaunchScreen.storyboard */; };
-		5E8F79221D26F8AD007D17ED /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F79211D26F8AD007D17ED /* HomeController.swift */; };
+		5E8F79221D26F8AD007D17ED /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F79211D26F8AD007D17ED /* MainController.swift */; };
 		5ECE9A461D3846CD008EFA8A /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 5ECE9A451D3846CD008EFA8A /* Fonts */; };
 		5EE3AC8D1D29A91E00310D6F /* CoreExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE3AC8C1D29A91E00310D6F /* CoreExtensions.swift */; };
+		5EF30D481EBF8C2D00D92FFD /* Landscape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30D471EBF8C2D00D92FFD /* Landscape.swift */; };
+		5EF30D4A1EBF924500D92FFD /* Spawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30D491EBF924500D92FFD /* Spawner.swift */; };
+		5EF30D4C1EBFB3B500D92FFD /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30D4B1EBFB3B500D92FFD /* ScoreNode.swift */; };
+		5EF30D4E1EC027C400D92FFD /* StatusNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30D4D1EC027C400D92FFD /* StatusNode.swift */; };
+		5EF368631EC16A3D00859C67 /* PlayerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF368621EC16A3D00859C67 /* PlayerNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5E6943521D2B487000489692 /* GameHub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameHub.swift; sourceTree = "<group>"; };
+		5E6943521D2B487000489692 /* Pokemon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pokemon.swift; sourceTree = "<group>"; };
 		5E8F79081D26F7A2007D17ED /* nostalgia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nostalgia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E8F790B1D26F7A2007D17ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5E8F790F1D26F7A2007D17ED /* Ascend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ascend.swift; sourceTree = "<group>"; };
+		5E8F790F1D26F7A2007D17ED /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		5E8F79161D26F7A2007D17ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5E8F79191D26F7A2007D17ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5E8F791B1D26F7A2007D17ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5E8F79211D26F8AD007D17ED /* HomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
+		5E8F79211D26F8AD007D17ED /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		5ECE9A451D3846CD008EFA8A /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		5EE3AC8C1D29A91E00310D6F /* CoreExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreExtensions.swift; sourceTree = "<group>"; };
+		5EF30D471EBF8C2D00D92FFD /* Landscape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Landscape.swift; sourceTree = "<group>"; };
+		5EF30D491EBF924500D92FFD /* Spawner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spawner.swift; sourceTree = "<group>"; };
+		5EF30D4B1EBFB3B500D92FFD /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreNode.swift; sourceTree = "<group>"; };
+		5EF30D4D1EC027C400D92FFD /* StatusNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusNode.swift; sourceTree = "<group>"; };
+		5EF368621EC16A3D00859C67 /* PlayerNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,9 +72,14 @@
 			children = (
 				5E8F790B1D26F7A2007D17ED /* AppDelegate.swift */,
 				5EE3AC8C1D29A91E00310D6F /* CoreExtensions.swift */,
-				5E8F79211D26F8AD007D17ED /* HomeController.swift */,
-				5E6943521D2B487000489692 /* GameHub.swift */,
-				5E8F790F1D26F7A2007D17ED /* Ascend.swift */,
+				5E8F79211D26F8AD007D17ED /* MainController.swift */,
+				5E6943521D2B487000489692 /* Pokemon.swift */,
+				5EF30D471EBF8C2D00D92FFD /* Landscape.swift */,
+				5EF30D491EBF924500D92FFD /* Spawner.swift */,
+				5EF368621EC16A3D00859C67 /* PlayerNode.swift */,
+				5EF30D4B1EBFB3B500D92FFD /* ScoreNode.swift */,
+				5EF30D4D1EC027C400D92FFD /* StatusNode.swift */,
+				5E8F790F1D26F7A2007D17ED /* GameScene.swift */,
 				5E8F79161D26F7A2007D17ED /* Assets.xcassets */,
 				5ECE9A451D3846CD008EFA8A /* Fonts */,
 				5E8F79181D26F7A2007D17ED /* LaunchScreen.storyboard */,
@@ -146,11 +161,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E6943531D2B487000489692 /* GameHub.swift in Sources */,
-				5E8F79221D26F8AD007D17ED /* HomeController.swift in Sources */,
+				5EF30D4A1EBF924500D92FFD /* Spawner.swift in Sources */,
+				5E6943531D2B487000489692 /* Pokemon.swift in Sources */,
+				5EF30D481EBF8C2D00D92FFD /* Landscape.swift in Sources */,
+				5E8F79221D26F8AD007D17ED /* MainController.swift in Sources */,
+				5EF368631EC16A3D00859C67 /* PlayerNode.swift in Sources */,
+				5EF30D4E1EC027C400D92FFD /* StatusNode.swift in Sources */,
 				5EE3AC8D1D29A91E00310D6F /* CoreExtensions.swift in Sources */,
-				5E8F79101D26F7A2007D17ED /* Ascend.swift in Sources */,
+				5E8F79101D26F7A2007D17ED /* GameScene.swift in Sources */,
 				5E8F790C1D26F7A2007D17ED /* AppDelegate.swift in Sources */,
+				5EF30D4C1EBFB3B500D92FFD /* ScoreNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

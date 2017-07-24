@@ -22,7 +22,7 @@ extension CGFloat {
   static func random() -> CGFloat {
     return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
   }
-
+  
   static func random(min: CGFloat, max: CGFloat) -> CGFloat {
     return min + CGFloat.random() * (max - min)
   }
@@ -34,35 +34,69 @@ extension UIColor {
     Scanner(string: hex.substring(from: hex.characters.index(hex.startIndex, offsetBy: 1))).scanHexInt32(&hexValue)
     self.init(red: CGFloat((hexValue & 0xFF0000) >> 16) / 255, green: CGFloat((hexValue & 0x00FF00) >> 8) / 255, blue: CGFloat(hexValue & 0x0000FF) / 255, alpha: alpha)
   }
+  
+  static var darkText: UIColor {
+    return UIColor(hex: "#404040")
+  }
+  
+  static var lightText: UIColor {
+    return UIColor(hex: "#F8F8F8")
+  }
+  
+  static var greenHealth: UIColor {
+    return UIColor(hex: "#58D080")
+  }
+  
+  static var greenHealthLight: UIColor {
+    return UIColor(hex: "#70F8A8")
+  }
+  
+  static var yellowHealth: UIColor {
+    return UIColor(hex: "#C8A808")
+  }
+  
+  static var yellowHealthLight: UIColor {
+    return UIColor(hex: "#F8E038")
+  }
+  
+  static var redHealth: UIColor {
+    return UIColor(hex: "#A84048")
+  }
+  
+  static var redHealthLight: UIColor {
+    return UIColor(hex: "#F85838")
+  }
+  
+  static var exp: UIColor {
+    return UIColor(hex: "#40C8F8")
+  }
 }
 
 extension SKAction {
-  static func moveTo(x: CGFloat, withDuration duration: TimeInterval, remove willRemove: Bool = false) -> SKAction {
+  static func moveTo(x: CGFloat, withDuration duration: TimeInterval, remove: Bool = false) -> SKAction {
     let moveAction = SKAction.moveTo(x: x, duration: duration)
-
-    if willRemove {
+    
+    if (remove) {
       let removeAction = SKAction.removeFromParent()
       return SKAction.sequence([moveAction, removeAction])
-    } else {
-      return moveAction
     }
+    return moveAction
   }
-
+  
   static func fade(in fadeIn: Bool, withDuration duration: TimeInterval, waitFirst: TimeInterval = 0, waitLast: TimeInterval = 0) -> SKAction {
     let waitFirstAction = SKAction.wait(forDuration: waitFirst)
     let fadeAction: SKAction
     let waitLastAction = SKAction.wait(forDuration: waitLast)
-
-    switch fadeIn {
-    case true:
+    
+    if (fadeIn) {
       fadeAction = .fadeIn(withDuration: duration)
-    case false:
+    } else {
       fadeAction = .fadeOut(withDuration: duration)
     }
-
+    
     return SKAction.sequence([waitFirstAction, fadeAction, waitLastAction])
   }
-
+  
   static func spawnInfinite(delay: TimeInterval, spawn: @escaping () -> Void) -> SKAction {
     let spawnAction = SKAction.run(spawn)
     let waitAction = SKAction.wait(forDuration: delay)
@@ -72,7 +106,7 @@ extension SKAction {
 }
 
 extension SKNode {
-  func runAction(action: SKAction, withKey: String, completion: @escaping () -> Void) -> Void {
+  func runAction(action: SKAction, withKey: String, completion: @escaping () -> Void) {
     let completionAction = SKAction.run(completion)
     let actionSequence = SKAction.sequence([action, completionAction])
     run(actionSequence, withKey: withKey)

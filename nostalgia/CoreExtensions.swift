@@ -19,10 +19,13 @@ public func ^^ (radix: Int, power: Int) -> Int {
 }
 
 extension CGFloat {
+  
+  // Returns a random number CGFloat.
   static func random() -> CGFloat {
     return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
   }
   
+  // Returns a random CGFloat value between in [min, max).
   static func random(min: CGFloat, max: CGFloat) -> CGFloat {
     return min + CGFloat.random() * (max - min)
   }
@@ -73,6 +76,8 @@ extension UIColor {
 }
 
 extension SKAction {
+  
+  // Custom SKAction which includes the option to remove the node directly after moving to a specific x position.
   static func moveTo(x: CGFloat, withDuration duration: TimeInterval, remove: Bool = false) -> SKAction {
     let moveAction = SKAction.moveTo(x: x, duration: duration)
     
@@ -83,6 +88,7 @@ extension SKAction {
     return moveAction
   }
   
+  // Custom fade function which includes option to switch fade effects and add delays before and after fading.
   static func fade(in fadeIn: Bool, withDuration duration: TimeInterval, waitFirst: TimeInterval = 0, waitLast: TimeInterval = 0) -> SKAction {
     let waitFirstAction = SKAction.wait(forDuration: waitFirst)
     let fadeAction: SKAction
@@ -97,6 +103,7 @@ extension SKAction {
     return SKAction.sequence([waitFirstAction, fadeAction, waitLastAction])
   }
   
+  // Custom action which enables an escaping function to be called indefinitely after a specified delay.
   static func spawnInfinite(delay: TimeInterval, spawn: @escaping () -> Void) -> SKAction {
     let spawnAction = SKAction.run(spawn)
     let waitAction = SKAction.wait(forDuration: delay)
@@ -106,6 +113,7 @@ extension SKAction {
 }
 
 extension SKNode {
+  // Runs an action and provides a completion handler.
   func runAction(action: SKAction, withKey: String, completion: @escaping () -> Void) {
     let completionAction = SKAction.run(completion)
     let actionSequence = SKAction.sequence([action, completionAction])

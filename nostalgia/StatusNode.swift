@@ -10,6 +10,7 @@ import SpriteKit
 
 // position and name
 class StatusNode: SKSpriteNode {
+  
   private var pokemon: Pokemon!
   private var hpBarWidth: CGFloat!
   private var expBarWidth: CGFloat!
@@ -93,6 +94,7 @@ class StatusNode: SKSpriteNode {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // Updates the nameLabel on the status UI.
   func updateName() {
     let nameLabel = childNode(withName: "nameLabel") as! SKLabelNode
     if let nickname = pokemon.nickname {
@@ -102,6 +104,7 @@ class StatusNode: SKSpriteNode {
     }
   }
   
+  // Updates the HP value on the status UI.
   func updateHP() {
     let hpFraction = CGFloat(pokemon.hp / pokemon.maxHP)
 
@@ -127,6 +130,7 @@ class StatusNode: SKSpriteNode {
     }
   }
   
+  // Updates the EXP value on the status UI. 
   func updateEXP() {
     let expBar = childNode(withName: "expBar") as! SKSpriteNode
     expBar.size.width = expBarWidth * CGFloat(pokemon.exp / pokemon.maxEXP)

@@ -120,7 +120,6 @@
 				TargetAttributes = {
 					5E8F79071D26F7A2007D17ED = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 84GR68BEJA;
 						LastSwiftMigration = 0820;
 					};
 				};
@@ -282,7 +281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 84GR68BEJA;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = nostalgia/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -296,7 +295,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 84GR68BEJA;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = nostalgia/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

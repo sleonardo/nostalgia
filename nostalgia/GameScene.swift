@@ -16,6 +16,7 @@ enum PhysicsCategory: UInt32 {
 }
 
 class GameScene: SKScene {
+  
   enum GameScreen {
     case mainMenu, inGame
   }
@@ -50,6 +51,7 @@ class GameScene: SKScene {
     drawLandscape()
   }
   
+  // Setups up the landscape for the game scene and prepares the scene to be animated.
   private func drawLandscape() -> Void {
     backgroundColor = UIColor(hex: "#C6E7FF")
     
@@ -84,6 +86,7 @@ class GameScene: SKScene {
     addChild(groundBarrier)
   }
   
+  // Animates the background indefinitely to make pokemon feel like it is moving forward.
   private func animateLandscape() -> Void {
     let landscapeNodes = landscape.animatingNodes.count
     for i in 0 ..< landscapeNodes {
@@ -166,6 +169,7 @@ class GameScene: SKScene {
 }
 
 extension GameScene: SKPhysicsContactDelegate {
+  
   func didBegin(_ contact: SKPhysicsContact) -> Void {
     let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
     

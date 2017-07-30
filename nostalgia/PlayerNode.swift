@@ -9,6 +9,7 @@
 import SpriteKit
 
 class PlayerNode: SKSpriteNode {
+  
   override init(texture: SKTexture!, color: SKColor, size: CGSize) {
     super.init(texture: texture, color: color, size: size)
   }
@@ -40,6 +41,7 @@ class PlayerNode: SKSpriteNode {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // Returns the path of the player pokemon model - used for physics collisions.
   private func fetchPath(model: String, size: CGFloat = 1) -> CGPath {
     let path = CGMutablePath()
     var offsetX: CGFloat

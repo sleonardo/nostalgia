@@ -9,15 +9,6 @@
 import SpriteKit
 
 class ScoreNode: SKSpriteNode {
-  var score: Int = 0 {
-    didSet {
-      if (!(score == 0 || score == oldValue + 1)) {
-        score = oldValue
-      } else {
-        updateScore()
-      }
-    }
-  }
   
   override init(texture: SKTexture!, color: SKColor, size: CGSize) {
     super.init(texture: texture, color: color, size: size)
@@ -47,15 +38,28 @@ class ScoreNode: SKSpriteNode {
     fatalError("init(coder:) has not been implemented")
   }
   
+  var score: Int = 0 {
+    didSet {
+      if (!(score == 0 || score == oldValue + 1)) {
+        score = oldValue
+      } else {
+        updateScore()
+      }
+    }
+  }
+  
+  // Updates the scoreboard label with the current score.
   private func updateScore() {
     let scoreLabel = childNode(withName: "scoreLabel") as! SKLabelNode
     scoreLabel.text = "SCORE: \(score)"
   }
   
+  // Increments the current score.
   func increaseScore() {
     score += 1
   }
   
+  // Resets the score back to zero.
   func resetScore() {
     score = 0
   }

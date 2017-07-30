@@ -9,6 +9,7 @@
 import SpriteKit
 
 class MainController: UIViewController {
+  
   override func loadView() {
     self.view = SKView()
   }

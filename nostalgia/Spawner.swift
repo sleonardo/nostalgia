@@ -9,6 +9,8 @@
 import SpriteKit
 
 class Spawner {
+  
+  // Returns the path of a boulder - used for physics collisions.
   static func fetchBoulderPath() -> CGPath {
     let offsetX: CGFloat = 27 / 2
     let offsetY: CGFloat = 30 / 2
@@ -43,6 +45,7 @@ class Spawner {
     return path
   }
   
+  // Spawns an indefinite amount of boulder rings.
   static func start(in scene: GameScene) -> SKAction {
     let playerNode = scene.childNode(withName: "playerNode")
     let spriteScale = playerNode!.xScale

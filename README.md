@@ -1,7 +1,7 @@
 Project Nostalgia
 ===============
 
-This project tries to take recreate Pokémon Emerald introduction scene and turn it into an iOS arcade style game. All artwork is ripped directly from the Pokémon Emerald ROM and is therefore impossible for the app to make it to the Appstore (without a cease and desist letter from Nintendo).
+This project tries to recreate the Pokémon Emerald introduction scene and turn it into an iOS arcade style game. All artwork is ripped directly from the Pokémon Emerald ROM and is therefore impossible for the app to make it to the Appstore (without a cease and desist letter from Nintendo).
 
 1. [Introduction](#introduction)
 1. [Features](#features)

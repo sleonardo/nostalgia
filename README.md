@@ -1,4 +1,10 @@
 Project Nostalgia
+<br>
+![GitHub downloads](https://img.shields.io/github/downloads/george-lim/nostalgia/total.svg)
+[![GitHub release](https://img.shields.io/github/release/george-lim/nostalgia.svg)](https://github.com/george-lim/nostalgia/releases)
+[![GitHub issues](https://img.shields.io/github/issues/george-lim/nostalgia.svg)](https://github.com/george-lim/nostalgia/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/george-lim/nostalgia.svg)](https://github.com/george-lim/nostalgia/pulls)
+[![license](https://img.shields.io/github/license/george-lim/nostalgia.svg)](https://github.com/george-lim/nostalgia/blob/master/LICENSE)
 ===============
 
 This project reimagines the Pokémon Emerald introduction scene as arcade style iOS game. All artwork is ripped directly from the Pokémon Emerald ROM and is thus unable to be published on the App Store.
